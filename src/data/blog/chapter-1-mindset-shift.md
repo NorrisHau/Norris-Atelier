@@ -1,7 +1,7 @@
 ---
 title: "第一章：观念重塑——为什么要投资？"
 description: "打破“投资就是投机”或“投资很难”的固有印象，建立长期主义视角。"
-pubDatetime: 2026-03-24T00:01:00Z
+pubDatetime: 2026-03-22T00:01:00Z
 featured: true
 draft: false
 tags:

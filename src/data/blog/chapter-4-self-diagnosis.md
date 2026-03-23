@@ -1,7 +1,7 @@
 ---
 title: "第四章：自我诊断——在投资前先理清财务状况"
 description: "确保投资不会毁掉生活，做到“手中有粮，心中不慌”。"
-pubDatetime: 2026-03-24T00:04:00Z
+pubDatetime: 2026-03-22T00:04:00Z
 featured: true
 draft: false
 tags:
