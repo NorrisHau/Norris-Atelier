@@ -8,6 +8,7 @@ tags:
   - finance
   - investment
   - chapter4
+chapter: 4
 ---
 
 *目的：确保投资不会毁掉生活，做到“手中有粮，心中不慌”。*

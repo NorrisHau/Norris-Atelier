@@ -8,6 +8,7 @@ tags:
   - finance
   - investment
   - chapter2
+chapter: 2
 ---
 
 *目的：在进入实操前，先穿上“救生衣”，理解市场的游戏规则。*

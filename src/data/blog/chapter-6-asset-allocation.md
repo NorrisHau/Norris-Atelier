@@ -8,6 +8,7 @@ tags:
   - finance
   - investment
   - chapter6
+chapter: 6
 ---
 
 *目的：这是文档的高潮，教他如何根据自身情况构建“投资组合”。*

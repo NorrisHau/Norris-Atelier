@@ -8,6 +8,7 @@ tags:
   - finance
   - investment
   - chapter3
+chapter: 3
 ---
 
 *目的：像逛超市一样认识各种理财产品。*
