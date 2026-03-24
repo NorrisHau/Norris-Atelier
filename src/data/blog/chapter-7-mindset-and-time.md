@@ -8,6 +8,7 @@ tags:
   - finance
   - investment
   - chapter7
+chapter: 7
 ---
 
 *目的：防止在牛市贪婪，在熊市恐惧。*

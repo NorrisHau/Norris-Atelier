@@ -278,6 +278,151 @@ const nextPost =
   }
   attachCopyButtons();
 
+  async function loadChartJs() {
+    if (window.Chart) return window.Chart;
+
+    await new Promise((resolve, reject) => {
+      const existingScript = document.querySelector(
+        'script[data-chartjs-loader="true"]'
+      );
+      if (existingScript) {
+        existingScript.addEventListener("load", () => resolve(true), {
+          once: true,
+        });
+        existingScript.addEventListener("error", () => reject(false), {
+          once: true,
+        });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js";
+      script.async = true;
+      script.dataset.chartjsLoader = "true";
+      script.onload = () => resolve(true);
+      script.onerror = () => reject(false);
+      document.head.appendChild(script);
+    });
+
+    return window.Chart;
+  }
+
+  async function renderFinanceChapterCharts() {
+    const inflationCanvas = document.getElementById("inflationChart");
+    const compoundCanvas = document.getElementById("compoundChart");
+
+    if (!inflationCanvas && !compoundCanvas) return;
+
+    const Chart = await loadChartJs();
+    if (!Chart) return;
+
+    if (inflationCanvas && !inflationCanvas.dataset.chartRendered) {
+      const years = Array.from({ length: 31 }, (_, i) => i);
+      const inflation3 = years.map(y => 100 * Math.pow(1 - 0.03, y));
+      const inflation5 = years.map(y => 100 * Math.pow(1 - 0.05, y));
+
+      new Chart(inflationCanvas, {
+        type: "line",
+        data: {
+          labels: years.map(y => `第 ${y} 年`),
+          datasets: [
+            {
+              label: "3% 通胀下购买力 (万)",
+              data: inflation3,
+              borderColor: "rgba(255, 99, 132, 1)",
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              fill: true,
+              tension: 0.4,
+            },
+            {
+              label: "5% 通胀下购买力 (万)",
+              data: inflation5,
+              borderColor: "rgba(54, 162, 235, 1)",
+              backgroundColor: "rgba(54, 162, 235, 0.2)",
+              fill: true,
+              tension: 0.4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: "100万初始资金购买力变化趋势 (折线图)",
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "实际购买力 (折合万)" },
+            },
+            x: {
+              title: { display: true, text: "时间 (年)" },
+            },
+          },
+        },
+      });
+
+      inflationCanvas.dataset.chartRendered = "true";
+    }
+
+    if (compoundCanvas && !compoundCanvas.dataset.chartRendered) {
+      const years = Array.from({ length: 31 }, (_, i) => i);
+      const rate0 = years.map(() => 10);
+      const rate3 = years.map(y => 10 * Math.pow(1 + 0.03, y));
+      const rate8 = years.map(y => 10 * Math.pow(1 + 0.08, y));
+
+      new Chart(compoundCanvas, {
+        type: "line",
+        data: {
+          labels: years.map(y => `第 ${y} 年`),
+          datasets: [
+            {
+              label: "0% 收益 (藏床底)",
+              data: rate0,
+              borderColor: "rgba(201, 203, 207, 1)",
+              tension: 0.4,
+            },
+            {
+              label: "3% 年化收益",
+              data: rate3,
+              borderColor: "rgba(255, 205, 86, 1)",
+              tension: 0.4,
+            },
+            {
+              label: "8% 年化收益 (复利奇迹)",
+              data: rate8,
+              borderColor: "rgba(75, 192, 192, 1)",
+              tension: 0.4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: "10万元投资在不同收益下的复利增长曲线",
+            },
+          },
+          scales: {
+            y: {
+              title: { display: true, text: "总资产 (万)" },
+            },
+            x: {
+              title: { display: true, text: "时间 (年)" },
+            },
+          },
+        },
+      });
+
+      compoundCanvas.dataset.chartRendered = "true";
+    }
+  }
+
+  renderFinanceChapterCharts();
+
   /* Go to page start after page swap */
   document.addEventListener("astro:after-swap", () =>
     window.scrollTo({ left: 0, top: 0, behavior: "instant" })

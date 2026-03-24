@@ -8,6 +8,7 @@ tags:
   - finance
   - investment
   - chapter5
+chapter: 5
 ---
 
 *目的：教授具体的执行方法，降低心理压力。*
