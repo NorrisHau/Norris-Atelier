@@ -194,6 +194,14 @@ html[data-theme="dark"] {
       monospace;
   }
 
+  .bento-card__desc,
+  time,
+  .domain-pill,
+  .theme-chip,
+  .theme-eyebrow {
+    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  }
+
   .bento-card__desc {
     @apply mt-2 mb-3 line-clamp-2 text-sm leading-6 text-[#666666];
   }
@@ -250,6 +258,49 @@ html[data-theme="dark"] {
     letter-spacing: 0.01em;
   }
 
+  .search-reveal {
+    @apply relative flex items-center justify-end overflow-hidden rounded-full border border-border/70 bg-background/80;
+    width: 2.2rem;
+    transition:
+      width 220ms ease,
+      border-color 200ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .search-reveal.is-open {
+    width: min(17.5rem, 82vw);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border-color: color-mix(in srgb, var(--color-border) 65%, var(--accent));
+  }
+
+  .search-reveal__trigger {
+    @apply z-10 flex shrink-0 items-center justify-center;
+  }
+
+  .search-reveal__form {
+    @apply pointer-events-none absolute inset-y-0 right-0 flex min-w-0 items-center gap-2 pe-1 ps-9 opacity-0;
+    transition: opacity 180ms ease;
+  }
+
+  .search-reveal.is-open .search-reveal__form {
+    @apply pointer-events-auto opacity-100;
+  }
+
+  .search-reveal__form input {
+    @apply h-8 min-w-0 flex-1 border-none bg-transparent text-sm outline-none;
+    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  }
+
+  .search-reveal__submit {
+    @apply rounded-full border border-border px-2.5 py-1 text-xs;
+  }
+
+  @media (max-width: 639px) {
+    .search-reveal.is-open {
+      width: min(15rem, 76vw);
+    }
+  }
+
   .reading-progress {
     @apply pointer-events-none fixed inset-x-0 top-0 z-50 h-[2px];
     background: var(--progress-track);
@@ -258,6 +309,35 @@ html[data-theme="dark"] {
   .reading-progress__bar {
     @apply h-full w-0;
     background: linear-gradient(90deg, #be8f47, var(--color-accent));
+  }
+
+  .post-shell {
+    @apply block xl:grid xl:grid-cols-[220px_minmax(0,1fr)] xl:gap-8;
+  }
+
+  .post-toc {
+    @apply sticky top-24 self-start rounded-2xl border border-border/80 bg-background/85 p-4 backdrop-blur-sm;
+    max-height: calc(100vh - 7rem);
+  }
+
+  .post-toc__title {
+    @apply mb-3 text-xs font-semibold tracking-[0.16em] text-foreground/55 uppercase;
+    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  }
+
+  .post-toc__list {
+    @apply flex max-h-[calc(100vh-11rem)] flex-col gap-2 overflow-auto pe-1;
+  }
+
+  .post-toc__link {
+    @apply rounded-md px-2 py-1.5 text-sm text-foreground/75 no-underline transition-colors hover:text-accent;
+    font-family:
+      "Source Han Serif SC", "Noto Serif SC", "Source Serif Pro", "Songti SC",
+      "STSong", serif;
+  }
+
+  .post-toc__link.is-sub {
+    @apply ms-3 text-xs opacity-80;
   }
 
   .triangle-legend {

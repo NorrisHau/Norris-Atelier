@@ -105,12 +105,22 @@ const nextPost =
     <div class="my-2 flex items-center gap-2">
       <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
     </div>
-    <article
-      id="article"
-      class="app-prose mt-8 w-full max-w-app rounded-[30px] bg-card-bg/70 px-6 py-8 sm:px-8 sm:py-10 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
-    >
-      <Content />
-    </article>
+    <div class="post-shell mt-8">
+      <aside
+        class="post-toc hidden xl:block"
+        aria-label="Table of contents"
+        data-pagefind-ignore
+      >
+        <p class="post-toc__title">目录</p>
+        <nav id="post-toc-list" class="post-toc__list" aria-label="文章目录"></nav>
+      </aside>
+      <article
+        id="article"
+        class="app-prose w-full max-w-app rounded-[30px] bg-card-bg/70 px-6 py-8 sm:px-8 sm:py-10 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+      >
+        <Content />
+      </article>
+    </div>
 
     {post.data.chapter === 1 && <Chapter1 />}
     {post.data.chapter === 2 && <Chapter2 />}
@@ -227,6 +237,29 @@ const nextPost =
     }
   }
   addHeadingLinks();
+
+  function buildTOC() {
+    const article = document.querySelector<HTMLElement>("#article");
+    const toc = document.querySelector<HTMLElement>("#post-toc-list");
+    if (!article || !toc) return;
+
+    const headings = Array.from(
+      article.querySelectorAll<HTMLElement>("h2[id], h3[id]")
+    );
+    if (!headings.length) {
+      toc.innerHTML = `<p class="text-sm text-foreground/50">本篇暂无目录。</p>`;
+      return;
+    }
+
+    toc.innerHTML = headings
+      .map(heading => {
+        const text = heading.textContent?.trim() ?? "";
+        const level = heading.tagName.toLowerCase();
+        return `<a href="#${heading.id}" class="post-toc__link ${level === "h3" ? "is-sub" : ""}">${text}</a>`;
+      })
+      .join("");
+  }
+  buildTOC();
 
   /** Attaches copy buttons to code blocks in the document,
    * allowing users to copy code easily. */
