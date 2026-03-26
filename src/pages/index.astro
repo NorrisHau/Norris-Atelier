@@ -77,10 +77,11 @@ const sortedPosts = getSortedPosts(posts);
       <ul class="theme-grid">
         {
           sortedPosts.map((data, index) => (
-            <Card variant="h3" index={index} {...data} />
+            <Card variant="h3" index={index} lazy={index > 5} {...data} />
           ))
         }
       </ul>
+      <div id="home-posts-sentinel" class="h-4" aria-hidden="true"></div>
     </section>
 
     <section
@@ -91,10 +92,27 @@ const sortedPosts = getSortedPosts(posts);
     >
       <div class="rounded-2xl border border-border bg-background p-6">
         <h2 class="text-2xl font-semibold tracking-wide">科技主题</h2>
-        <p class="mt-3 text-foreground/70">
-          科技主题内容正在整理中，后续将围绕 AI
-          工具流、效率系统与职业成长持续更新。
-        </p>
+        <p class="mt-3 text-foreground/70">先放 3 篇占位预告，后续逐步替换成正式内容。</p>
+        <ul class="mt-4 grid gap-3 text-sm text-foreground/80">
+          <li class="rounded-xl border border-border bg-card-bg/80 p-4">
+            <h3 class="text-base font-semibold">AI 工具流：从输入到可复用产出</h3>
+            <p class="mt-1 text-foreground/65">
+              记录个人内容工作流：选题、素材池、提示词模板、复盘看板。
+            </p>
+          </li>
+          <li class="rounded-xl border border-border bg-card-bg/80 p-4">
+            <h3 class="text-base font-semibold">信息系统：如何构建低摩擦知识库</h3>
+            <p class="mt-1 text-foreground/65">
+              用标签、双链与检索习惯，让“收藏”真正变成“可调用”。
+            </p>
+          </li>
+          <li class="rounded-xl border border-border bg-card-bg/80 p-4">
+            <h3 class="text-base font-semibold">技术职业成长：从执行者到系统设计者</h3>
+            <p class="mt-1 text-foreground/65">
+              聚焦反馈循环、复利能力和跨学科协作的成长路径。
+            </p>
+          </li>
+        </ul>
       </div>
     </section>
     <section
@@ -105,15 +123,33 @@ const sortedPosts = getSortedPosts(posts);
     >
       <div class="rounded-2xl border border-border bg-background/80 p-6">
         <h2 class="text-2xl font-semibold tracking-wide">健康主题</h2>
-        <p class="mt-3 text-foreground/70">
-          健康主题将围绕可持续生活节律、运动习惯和高压工作下的恢复系统展开。
-        </p>
+        <p class="mt-3 text-foreground/70">先放 3 篇占位预告，后续会上线完整章节。</p>
+        <ul class="mt-4 grid gap-3 text-sm text-foreground/80">
+          <li class="rounded-xl border border-border bg-card-bg/80 p-4">
+            <h3 class="text-base font-semibold">高压工作下的恢复系统</h3>
+            <p class="mt-1 text-foreground/65">
+              从睡眠、呼吸、微休息开始，建立可重复执行的恢复协议。
+            </p>
+          </li>
+          <li class="rounded-xl border border-border bg-card-bg/80 p-4">
+            <h3 class="text-base font-semibold">运动最小行动集：忙碌也能持续</h3>
+            <p class="mt-1 text-foreground/65">
+              提供 15 分钟可完成的力量+心肺组合，主打低门槛和一致性。
+            </p>
+          </li>
+          <li class="rounded-xl border border-border bg-card-bg/80 p-4">
+            <h3 class="text-base font-semibold">饮食与注意力：稳定能量曲线</h3>
+            <p class="mt-1 text-foreground/65">
+              通过简单可执行的餐盘策略，减少午后疲惫和认知波动。
+            </p>
+          </li>
+        </ul>
       </div>
     </section>
 
     <div class="my-8 text-center">
       <LinkButton href="/posts/">
-        查看全部文章
+        文章目录
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>
     </div>
@@ -151,5 +187,41 @@ const sortedPosts = getSortedPosts(posts);
       const tabEl = tab as HTMLElement;
       tabEl.addEventListener("click", () => activate(tabEl.dataset.theme));
     });
+
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-home-card]")
+    );
+    const sentinel = document.querySelector<HTMLElement>("#home-posts-sentinel");
+    if (!cards.length || !sentinel) return;
+
+    const estimateCardHeight = 168;
+    const initialCount = Math.max(
+      6,
+      Math.ceil(((window.innerHeight || 800) * 2) / estimateCardHeight)
+    );
+    const batchCount = 4;
+    let shownCount = 0;
+
+    const reveal = (count: number) => {
+      const nextCount = Math.min(cards.length, shownCount + count);
+      for (let i = shownCount; i < nextCount; i++) {
+        cards[i]?.removeAttribute("hidden");
+      }
+      shownCount = nextCount;
+      if (shownCount >= cards.length) observer?.disconnect();
+    };
+
+    reveal(initialCount);
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          reveal(batchCount);
+        }
+      },
+      { rootMargin: "220px 0px" }
+    );
+
+    observer.observe(sentinel);
   });
 </script>

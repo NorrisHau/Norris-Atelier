@@ -31,7 +31,10 @@
 
     p,
     li {
-      @apply leading-8;
+      @apply text-[20px] leading-[1.9] font-medium;
+      font-family:
+        "Source Han Serif SC", "Noto Serif SC", "Source Serif Pro", "Songti SC",
+        "STSong", serif;
     }
 
     a {
@@ -86,6 +89,9 @@
 
     blockquote {
       @apply border-s-accent/80 wrap-break-word opacity-80;
+      font-family:
+        "Source Han Serif SC", "Noto Serif SC", "Source Serif Pro", "Songti SC",
+        "STSong", serif;
     }
 
     details {
