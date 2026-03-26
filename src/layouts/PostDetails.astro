@@ -99,8 +99,7 @@ const nextPost =
       <header class="article-header">
         <h1
           transition:name={slugifyStr(title.replaceAll(".", "-"))}
-          class="inline-block text-2xl font-bold text-accent sm:text-3xl"
-          style='font-family:"Charter","Source Serif Pro","Noto Serif SC",Georgia,serif;letter-spacing:0.01em;'
+          class="article-title inline-block font-bold text-accent"
         >
           {title}
         </h1>
@@ -247,11 +246,13 @@ const nextPost =
   addHeadingLinks();
 
   function buildTOC() {
-    const article = document.querySelector<HTMLElement>("#article");
+    const article = document.querySelector<HTMLElement>(".article-prose-wrapper");
     const toc = document.querySelector<HTMLElement>("#post-toc-list");
     if (!article || !toc) return;
 
-    const headings = Array.from(article.querySelectorAll<HTMLElement>("h2, h3"));
+    const headings = Array.from(
+      article.querySelectorAll<HTMLElement>("h2, h3, h4")
+    );
     if (!headings.length) {
       toc.innerHTML = `<p class="text-sm text-foreground/50">本篇暂无目录。</p>`;
       return;
@@ -261,7 +262,7 @@ const nextPost =
       text
         .trim()
         .toLowerCase()
-        .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+        .replace(/[^\w\u4e00-\u9fa5\s-]/g, "")
         .replace(/\s+/g, "-")
         .replace(/-+/g, "-")
         .replace(/^-|-$/g, "");
@@ -273,7 +274,7 @@ const nextPost =
           heading.id = slugifyHeading(text) || `heading-${idx + 1}`;
         }
         const level = heading.tagName.toLowerCase();
-        return `<a href="#${heading.id}" class="post-toc__link ${level === "h3" ? "is-sub" : ""}">${text}</a>`;
+        return `<a href="#${heading.id}" class="post-toc__link ${level === "h3" ? "is-sub" : ""} ${level === "h4" ? "is-sub-two" : ""}">${text}</a>`;
       })
       .join("");
   }

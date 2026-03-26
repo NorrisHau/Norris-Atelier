@@ -29,7 +29,7 @@
 
 - 文章正文统一使用**非衬线**字体：`Inter / Noto Sans SC / system-ui`。
 - 适用范围：`p`、`li`、`blockquote`。
-- 标题仍可保留衬线风格，用于层级对比。
+- 文章主标题使用单独样式 `.article-title`（衬线风格，最大 `55px`）用于层级对比。
 
 ---
 

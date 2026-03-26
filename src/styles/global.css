@@ -370,6 +370,15 @@ html[data-theme="dark"] {
     @apply mb-2;
   }
 
+  .article-title {
+    font-family:
+      "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+      "Source Serif Pro", "Noto Serif SC", serif;
+    font-size: clamp(2.2rem, 5vw, 55px);
+    line-height: 1.08;
+    letter-spacing: 0.012em;
+  }
+
   .article-prose-wrapper {
     @apply w-full rounded-[30px] bg-card-bg/70 px-6 py-8 sm:px-8 sm:py-10;
     grid-column: content-start / content-end;
@@ -429,6 +438,10 @@ html[data-theme="dark"] {
 
   .post-toc__link.is-sub {
     @apply ms-3 text-xs opacity-80;
+  }
+
+  .post-toc__link.is-sub-two {
+    @apply ms-6 text-xs opacity-70;
   }
 
   .post-toc__link.is-active {
