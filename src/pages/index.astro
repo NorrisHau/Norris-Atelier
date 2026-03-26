@@ -14,7 +14,7 @@ const sortedPosts = getSortedPosts(posts);
 
 <Layout>
   <Header />
-  <main id="main-content" data-layout="index" class="app-layout">
+  <main id="main-content" data-layout="index" class="page-enter app-layout">
     <section class="theme-hero border-b border-border py-10">
       <p class="theme-eyebrow">Nana's Wealth Log · 2026</p>
       <h1 class="theme-title">用极简框架，构建长期有效的投资系统</h1>
@@ -32,6 +32,7 @@ const sortedPosts = getSortedPosts(posts);
           aria-controls="theme-panel-investment"
           id="theme-tab-investment"
         >
+          <span class="theme-chip__icon" aria-hidden="true">💰</span>
           投资
         </button>
         <button
@@ -43,7 +44,20 @@ const sortedPosts = getSortedPosts(posts);
           aria-controls="theme-panel-technology"
           id="theme-tab-technology"
         >
+          <span class="theme-chip__icon" aria-hidden="true">💻</span>
           科技
+        </button>
+        <button
+          type="button"
+          class="theme-chip"
+          data-theme="health"
+          role="tab"
+          aria-selected="false"
+          aria-controls="theme-panel-health"
+          id="theme-tab-health"
+        >
+          <span class="theme-chip__icon" aria-hidden="true">✚</span>
+          健康
         </button>
       </div>
     </section>
@@ -54,14 +68,18 @@ const sortedPosts = getSortedPosts(posts);
       role="tabpanel"
       aria-labelledby="theme-tab-investment"
     >
-      <div class="mb-6 flex items-end justify-between gap-4">
+      <div class="mb-8 flex items-end justify-between gap-4">
         <h2 class="text-2xl font-semibold tracking-wide">投资主题</h2>
         <span class="text-sm text-foreground/60"
           >当前已上线章节：{sortedPosts.length}</span
         >
       </div>
-      <ul>
-        {sortedPosts.map(data => <Card variant="h3" {...data} />)}
+      <ul class="theme-grid">
+        {
+          sortedPosts.map((data, index) => (
+            <Card variant="h3" index={index} {...data} />
+          ))
+        }
       </ul>
     </section>
 
@@ -76,6 +94,19 @@ const sortedPosts = getSortedPosts(posts);
         <p class="mt-3 text-foreground/70">
           科技主题内容正在整理中，后续将围绕 AI
           工具流、效率系统与职业成长持续更新。
+        </p>
+      </div>
+    </section>
+    <section
+      id="theme-panel-health"
+      class="theme-panel hidden py-10"
+      role="tabpanel"
+      aria-labelledby="theme-tab-health"
+    >
+      <div class="rounded-2xl border border-border bg-background/80 p-6">
+        <h2 class="text-2xl font-semibold tracking-wide">健康主题</h2>
+        <p class="mt-3 text-foreground/70">
+          健康主题将围绕可持续生活节律、运动习惯和高压工作下的恢复系统展开。
         </p>
       </div>
     </section>

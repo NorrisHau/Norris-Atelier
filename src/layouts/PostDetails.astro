@@ -89,12 +89,16 @@ const nextPost =
   <BackButton />
   <main
     id="main-content"
-    class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
+    class:list={[
+      "page-enter app-layout pb-12",
+      { "mt-8": !SITE.showBackButton },
+    ]}
     data-pagefind-body
   >
     <h1
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
       class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+      style='font-family:"Charter","Source Serif Pro","Noto Serif SC",Georgia,serif;letter-spacing:0.01em;'
     >
       {title}
     </h1>
@@ -103,7 +107,7 @@ const nextPost =
     </div>
     <article
       id="article"
-      class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+      class="app-prose mt-8 w-full max-w-app rounded-[30px] bg-card-bg/70 px-6 py-8 sm:px-8 sm:py-10 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     >
       <Content />
     </article>
@@ -164,14 +168,14 @@ const nextPost =
   /** Create a progress indicator
    *  at the top */
   function createProgressBar() {
+    if (document.querySelector(".reading-progress")) return;
     // Create the main container div
     const progressContainer = document.createElement("div");
-    progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+    progressContainer.className = "reading-progress";
 
     // Create the progress bar div
     const progressBar = document.createElement("div");
-    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.className = "reading-progress__bar";
     progressBar.id = "myBar";
 
     // Append the progress bar to the progress container
@@ -274,36 +278,6 @@ const nextPost =
     }
   }
   attachCopyButtons();
-
-  async function loadChartJs() {
-    if (window.Chart) return window.Chart;
-
-    await new Promise((resolve, reject) => {
-      const existingScript = document.querySelector(
-        'script[data-chartjs-loader="true"]'
-      );
-      if (existingScript) {
-        existingScript.addEventListener("load", () => resolve(true), {
-          once: true,
-        });
-        existingScript.addEventListener("error", () => reject(false), {
-          once: true,
-        });
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js";
-      script.async = true;
-      script.dataset.chartjsLoader = "true";
-      script.onload = () => resolve(true);
-      script.onerror = () => reject(false);
-      document.head.appendChild(script);
-    });
-
-    return window.Chart;
-  }
 
   /* Go to page start after page swap */
   document.addEventListener("astro:after-swap", () =>
