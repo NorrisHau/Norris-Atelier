@@ -131,48 +131,51 @@ const nextPost =
         {post.data.chapter === 4 && <Chapter4 />}
       </div>
 
-      <hr class="my-8 border-dashed" />
+      <div class="post-article">
+        <hr class="my-2 border-dashed" />
 
-      <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
-      </ul>
+        <ul class="mt-4 mb-6 flex flex-wrap gap-4 sm:my-6">
+          {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+        </ul>
 
-      <BackToTopButton />
+        <div class="post-article__meta">
+          <BackToTopButton />
+          <ShareLinks />
+        </div>
 
-      <ShareLinks />
+        <hr class="my-6 border-dashed" />
 
-      <hr class="my-6 border-dashed" />
-
-      <!-- Previous/Next Post Buttons -->
-      <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {
-          prevPost && (
-            <a
-              href={getPath(prevPost.id, prevPost.filePath)}
-              class="flex w-full gap-1 hover:opacity-75"
-            >
-              <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
-              <div>
-                <span>Previous Post</span>
-                <div class="text-sm text-accent/85">{prevPost.title}</div>
-              </div>
-            </a>
-          )
-        }
-        {
-          nextPost && (
-            <a
-              href={getPath(nextPost.id, nextPost.filePath)}
-              class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
-            >
-              <div>
-                <span>Next Post</span>
-                <div class="text-sm text-accent/85">{nextPost.title}</div>
-              </div>
-              <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
-            </a>
-          )
-        }
+        <!-- Previous/Next Post Buttons -->
+        <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {
+            prevPost && (
+              <a
+                href={getPath(prevPost.id, prevPost.filePath)}
+                class="flex w-full gap-1 hover:opacity-75"
+              >
+                <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
+                <div>
+                  <span>Previous Post</span>
+                  <div class="text-sm text-accent/85">{prevPost.title}</div>
+                </div>
+              </a>
+            )
+          }
+          {
+            nextPost && (
+              <a
+                href={getPath(nextPost.id, nextPost.filePath)}
+                class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
+              >
+                <div>
+                  <span>Next Post</span>
+                  <div class="text-sm text-accent/85">{nextPost.title}</div>
+                </div>
+                <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
+              </a>
+            )
+          }
+        </div>
       </div>
     </div>
   </main>
@@ -248,17 +251,27 @@ const nextPost =
     const toc = document.querySelector<HTMLElement>("#post-toc-list");
     if (!article || !toc) return;
 
-    const headings = Array.from(
-      article.querySelectorAll<HTMLElement>("h2[id], h3[id]")
-    );
+    const headings = Array.from(article.querySelectorAll<HTMLElement>("h2, h3"));
     if (!headings.length) {
       toc.innerHTML = `<p class="text-sm text-foreground/50">本篇暂无目录。</p>`;
       return;
     }
 
+    const slugifyHeading = text =>
+      text
+        .trim()
+        .toLowerCase()
+        .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+
     toc.innerHTML = headings
-      .map(heading => {
+      .map((heading, idx) => {
         const text = heading.textContent?.trim() ?? "";
+        if (!heading.id) {
+          heading.id = slugifyHeading(text) || `heading-${idx + 1}`;
+        }
         const level = heading.tagName.toLowerCase();
         return `<a href="#${heading.id}" class="post-toc__link ${level === "h3" ? "is-sub" : ""}">${text}</a>`;
       })

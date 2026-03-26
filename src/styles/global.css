@@ -375,6 +375,23 @@ html[data-theme="dark"] {
     grid-column: content-start / content-end;
   }
 
+  .post-article {
+    @apply rounded-2xl border border-border/70 bg-card-bg/55 px-5 py-4 sm:px-7 sm:py-6;
+    grid-column: content-start / content-end;
+  }
+
+  .post-article__meta {
+    @apply grid gap-4;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    .post-article__meta {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: end;
+    }
+  }
+
   .post-toc {
     @apply sticky top-24 self-start p-1;
     grid-column: left-start / content-start;

@@ -21,6 +21,7 @@
 - `.article-wrapper > *` 默认落在中轨 `content-start / content-end`。
 - `aside.post-toc` 固定在左轨 `left-start / content-start`，桌面端 sticky。
 - 所有文章主内容（包括标题信息）都被 `article-wrapper` 包裹和约束。
+- 文章正文后（标签/分享/上一篇下一篇）必须放入 `div.post-article`，并且该容器也必须由 `article-wrapper` 统一约束。
 
 ---
 
