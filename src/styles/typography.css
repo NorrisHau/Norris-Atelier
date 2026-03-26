@@ -11,6 +11,8 @@
     h4,
     th {
       @apply mb-3 text-foreground;
+      font-family:
+        "Charter", "Source Serif Pro", "Noto Serif SC", Georgia, serif;
     }
 
     h3 {
@@ -25,6 +27,11 @@
     table,
     code {
       @apply text-foreground;
+    }
+
+    p,
+    li {
+      @apply leading-8;
     }
 
     a {
@@ -68,6 +75,9 @@
 
     code {
       @apply rounded bg-muted/75 p-1 wrap-break-word text-foreground before:content-none after:content-none;
+      font-family:
+        "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", ui-monospace,
+        monospace;
     }
 
     .astro-code code {
@@ -94,6 +104,9 @@
   /* ===== Code Blocks & Syntax Highlighting ===== */
   .astro-code {
     @apply flex border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
+    font-family:
+      "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", ui-monospace,
+      monospace;
   }
 
   html[data-theme="dark"] .astro-code {

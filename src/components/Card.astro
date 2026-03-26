@@ -6,28 +6,30 @@ import Datetime from "./Datetime.astro";
 
 type Props = {
   variant?: "h2" | "h3";
+  index?: number;
 } & CollectionEntry<"blog">;
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const { variant: Heading = "h2", index = 0, id, data, filePath } = Astro.props;
 
 const { title, description, ...props } = data;
 ---
 
-<li class="my-6">
+<li class="my-6" style={`--card-index:${index};`}>
   <a
     href={getPath(id, filePath)}
     class:list={[
-      "inline-block text-lg font-medium text-accent",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
+      "bento-card",
+      "focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed",
     ]}
+    style="animation-delay: calc(var(--card-index, 0) * 90ms);"
   >
     <Heading
+      class="bento-card__title text-accent"
       style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
     >
       {title}
     </Heading>
+    <Datetime class="bento-card__meta" {...props} />
+    <p class="bento-card__desc">{description}</p>
   </a>
-  <Datetime {...props} />
-  <p>{description}</p>
 </li>
