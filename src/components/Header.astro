@@ -28,26 +28,23 @@ const isActive = (path: string) => {
   Skip to content
 </a>
 
-<header
-  class="app-header app-layout flex flex-col items-center justify-between sm:flex-row"
->
+<header class="app-header app-layout">
   <div
     id="top-nav-wrap"
     class:list={[
-      "py-4 sm:py-6",
+      "site-header-grid py-4 sm:py-5",
       "relative w-full",
-      "flex items-baseline justify-between sm:items-center",
     ]}
   >
     <a
       href="/"
-      class="brand-wordmark absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+      class="brand-wordmark site-brand py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:text-2xl sm:leading-none"
     >
       {SITE.title}
     </a>
     <nav
       id="nav-menu"
-      class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"
+      class="site-nav flex w-full flex-col items-center sm:py-0"
     >
       <button
         id="menu-btn"

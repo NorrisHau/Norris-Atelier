@@ -3,7 +3,7 @@
 @layer base {
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
-    @apply prose;
+    @apply prose max-w-none;
 
     h1,
     h2,
@@ -32,9 +32,7 @@
     p,
     li {
       @apply text-[20px] leading-[1.9] font-medium;
-      font-family:
-        "Source Han Serif SC", "Noto Serif SC", "Source Serif Pro", "Songti SC",
-        "STSong", serif;
+      font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
     }
 
     a {
@@ -89,9 +87,7 @@
 
     blockquote {
       @apply border-s-accent/80 wrap-break-word opacity-80;
-      font-family:
-        "Source Han Serif SC", "Noto Serif SC", "Source Serif Pro", "Songti SC",
-        "STSong", serif;
+      font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
     }
 
     details {

@@ -150,10 +150,17 @@ html[data-theme="dark"] {
   }
 
   .bento-card {
-    @apply flex items-stretch gap-4 rounded-xl border border-border p-4 transition duration-200 ease-out sm:gap-5 sm:p-5;
+    @apply grid items-stretch gap-4 rounded-xl border border-border p-4 transition duration-200 ease-out sm:gap-5 sm:p-5;
+    grid-template-columns: minmax(0, 1fr);
     background: color-mix(in srgb, var(--color-card-bg) 96%, transparent);
     animation: card-enter 360ms ease-out both;
     transform-origin: center;
+  }
+
+  @media (min-width: 640px) {
+    .bento-card {
+      grid-template-columns: minmax(0, 1fr) 138px;
+    }
   }
 
   .bento-card:hover {
@@ -258,6 +265,45 @@ html[data-theme="dark"] {
     letter-spacing: 0.01em;
   }
 
+  .site-header-grid {
+    @apply grid items-center gap-3 sm:gap-4;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .site-brand {
+    @apply relative z-10;
+  }
+
+  .site-nav {
+    @apply justify-self-end;
+  }
+
+  .site-footer {
+    @apply pt-10;
+  }
+
+  .site-footer-grid {
+    @apply rounded-t-2xl;
+    background: color-mix(in srgb, var(--color-card-bg) 80%, transparent);
+  }
+
+  .content-grid {
+    @apply grid;
+    grid-template-columns:
+      [full-start] minmax(0.75rem, 1fr)
+      [content-start] minmax(0, 980px)
+      [content-end] minmax(0.75rem, 1fr)
+      [full-end];
+  }
+
+  .content-grid > * {
+    grid-column: content-start / content-end;
+  }
+
+  .content-grid > .content-grid__full {
+    grid-column: full-start / full-end;
+  }
+
   .search-reveal {
     @apply relative flex items-center overflow-hidden rounded-full border border-border/70 bg-background/80 text-foreground;
     width: 2.6rem;
@@ -307,17 +353,68 @@ html[data-theme="dark"] {
     background: linear-gradient(90deg, #be8f47, var(--color-accent));
   }
 
-  .post-shell {
-    @apply block xl:mx-auto xl:grid xl:max-w-[1240px] xl:grid-cols-[220px_minmax(0,960px)] xl:justify-center xl:gap-12;
+  .article-wrapper {
+    @apply mt-8 grid gap-y-6;
+    grid-template-columns:
+      [left-start] minmax(0, 1fr)
+      [content-start] minmax(0, 960px)
+      [content-end] minmax(0, 1fr)
+      [right-end];
+  }
+
+  .article-wrapper > * {
+    grid-column: content-start / content-end;
+  }
+
+  .article-header {
+    @apply mb-2;
+  }
+
+  .article-title {
+    font-family:
+      "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+      "Source Serif Pro", "Noto Serif SC", serif;
+    font-size: clamp(2.2rem, 5vw, 55px);
+    line-height: 1.08;
+    letter-spacing: 0.012em;
   }
 
   .article-prose-wrapper {
-    @apply w-full max-w-[960px] rounded-[30px] bg-card-bg/70 px-8 py-10;
+    @apply w-full rounded-[30px] bg-card-bg/70 px-6 py-8 sm:px-8 sm:py-10;
+    grid-column: content-start / content-end;
+  }
+
+  .post-article {
+    @apply rounded-2xl border border-border/70 bg-card-bg/55 px-5 py-4 sm:px-7 sm:py-6;
+    grid-column: content-start / content-end;
+  }
+
+  .post-article__meta {
+    @apply grid gap-4;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    .post-article__meta {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: end;
+    }
   }
 
   .post-toc {
     @apply sticky top-24 self-start p-1;
+    grid-column: left-start / content-start;
     max-height: calc(100vh - 7rem);
+  }
+
+  @media (max-width: 1279px) {
+    .article-wrapper {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .article-wrapper > * {
+      grid-column: 1 / -1;
+    }
   }
 
   .post-toc__title {
@@ -336,13 +433,15 @@ html[data-theme="dark"] {
 
   .post-toc__link {
     @apply rounded-md px-1 py-1 text-sm text-foreground/70 no-underline transition-colors hover:text-accent;
-    font-family:
-      "Source Han Serif SC", "Noto Serif SC", "Source Serif Pro", "Songti SC",
-      "STSong", serif;
+    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
   }
 
   .post-toc__link.is-sub {
     @apply ms-3 text-xs opacity-80;
+  }
+
+  .post-toc__link.is-sub-two {
+    @apply ms-6 text-xs opacity-70;
   }
 
   .post-toc__link.is-active {
