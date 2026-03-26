@@ -14,8 +14,8 @@ const sortedPosts = getSortedPosts(posts);
 
 <Layout>
   <Header />
-  <main id="main-content" data-layout="index" class="page-enter app-layout home-shell">
-    <section class="theme-hero home-hero border border-border py-8 sm:py-10">
+  <main id="main-content" data-layout="index" class="page-enter app-layout content-grid">
+    <section class="theme-hero content-grid__full border-b border-border py-10">
       <p class="theme-eyebrow">Nana's Wealth Log · 2026</p>
       <h1 class="theme-title">用极简框架，构建长期有效的投资系统</h1>
       <p class="theme-subtitle">
@@ -62,19 +62,9 @@ const sortedPosts = getSortedPosts(posts);
       </div>
     </section>
 
-    <aside class="home-side-panel" aria-label="阅读索引">
-      <h2 class="home-side-panel__title">阅读路径</h2>
-      <p class="home-side-panel__desc">按你当下的关注点开始，逐步搭建稳定、可复用的长期系统。</p>
-      <ul class="home-side-panel__list">
-        <li>01 · 认知与心态重构</li>
-        <li>02 · 核心原则与风险边界</li>
-        <li>03 · 工具、策略与执行节奏</li>
-      </ul>
-    </aside>
-
     <section
       id="theme-panel-investment"
-      class="theme-panel home-panel py-8 sm:py-10"
+      class="theme-panel py-10"
       role="tabpanel"
       aria-labelledby="theme-tab-investment"
     >
@@ -96,7 +86,7 @@ const sortedPosts = getSortedPosts(posts);
 
     <section
       id="theme-panel-technology"
-      class="theme-panel home-panel hidden py-8 sm:py-10"
+      class="theme-panel hidden py-10"
       role="tabpanel"
       aria-labelledby="theme-tab-technology"
     >
@@ -127,7 +117,7 @@ const sortedPosts = getSortedPosts(posts);
     </section>
     <section
       id="theme-panel-health"
-      class="theme-panel home-panel hidden py-8 sm:py-10"
+      class="theme-panel hidden py-10"
       role="tabpanel"
       aria-labelledby="theme-tab-health"
     >
@@ -157,7 +147,7 @@ const sortedPosts = getSortedPosts(posts);
       </div>
     </section>
 
-    <div class="my-6 text-center sm:my-8 home-cta">
+    <div class="my-8 text-center">
       <LinkButton href="/posts/">
         文章目录
         <IconArrowRight class="inline-block rtl:-rotate-180" />
