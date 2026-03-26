@@ -13,17 +13,7 @@ const { variant: Heading = "h2", index = 0, id, data, filePath } = Astro.props;
 
 const { title, description, tags = [], ...props } = data;
 
-const rawBody = (Astro.props.body ?? "") as string;
-const plainBody = rawBody
-  .replace(/```[\s\S]*?```/g, " ")
-  .replace(/`[^`]*`/g, " ")
-  .replace(/!\[[^\]]*]\([^)]*\)/g, " ")
-  .replace(/\[[^\]]*]\([^)]*\)/g, " ")
-  .replace(/[#>*_\-\n]/g, " ")
-  .replace(/\s+/g, " ")
-  .trim();
-
-const previewBase = plainBody || description;
+const previewBase = description;
 const previewText =
   previewBase.length > 108
     ? `${previewBase.slice(0, 108).trim()}…`
@@ -42,34 +32,76 @@ const domainLabelMap = {
 };
 
 const domainIconMap = {
-  investment: "◉",
-  technology: "⌁",
-  health: "🌿",
+  investment: "💰",
+  technology: "💻",
+  health: "✚",
 };
+
+const coverImage =
+  typeof data.ogImage === "string" ? data.ogImage : data.ogImage?.src;
 ---
 
-<li class="my-6" style={`--card-index:${index};`}>
+<li class="my-3" style={`--card-index:${index};`}>
   <a
     href={getPath(id, filePath)}
     class:list={[
       "bento-card",
       "focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed",
     ]}
-    style="animation-delay: calc(var(--card-index, 0) * 90ms);"
+    style="animation-delay: calc(var(--card-index, 0) * 70ms);"
   >
-    <Heading
-      class="bento-card__title text-foreground"
-      style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
-    >
-      {title}
-    </Heading>
-    <p class="bento-card__desc">{previewText}</p>
-    <div class="bento-card__meta">
-      <Datetime {...props} />
-      <span class="domain-pill" data-domain={domain}>
-        <span aria-hidden="true">{domainIconMap[domain]}</span>
-        {domainLabelMap[domain]}
-      </span>
+    <div class="bento-card__content">
+      <Heading
+        class="bento-card__title text-foreground"
+        style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+      >
+        {title}
+      </Heading>
+      <p class="bento-card__desc">{previewText}</p>
+      <div class="bento-card__meta">
+        <Datetime {...props} />
+        <span class="domain-pill" data-domain={domain}>
+          <span aria-hidden="true">{domainIconMap[domain]}</span>
+          {domainLabelMap[domain]}
+        </span>
+      </div>
+    </div>
+
+    <div class="bento-card__thumb" aria-hidden="true">
+      {
+        coverImage ? (
+          <img src={coverImage} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <svg viewBox="0 0 320 220" role="img" aria-label="文章默认配图">
+            <rect width="320" height="220" rx="18" fill="#f0e8d8" />
+            <circle cx="88" cy="86" r="34" fill="#c9b086" />
+            <rect
+              x="138"
+              y="62"
+              width="120"
+              height="16"
+              rx="8"
+              fill="#b7a07b"
+            />
+            <rect
+              x="138"
+              y="90"
+              width="102"
+              height="14"
+              rx="7"
+              fill="#d3c2a3"
+            />
+            <rect
+              x="64"
+              y="146"
+              width="192"
+              height="12"
+              rx="6"
+              fill="#bea47f"
+            />
+          </svg>
+        )
+      }
     </div>
   </a>
 </li>
