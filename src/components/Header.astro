@@ -4,6 +4,7 @@ import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import LinkButton from "./LinkButton.astro";
+import BrandLogo from "./BrandLogo.astro";
 import { SITE } from "@/config";
 
 const { pathname } = Astro.url;
@@ -32,15 +33,16 @@ const isActive = (path: string) => {
   <div
     id="top-nav-wrap"
     class:list={[
-      "site-header-grid py-4 sm:py-5",
+      "site-header-grid py-2 sm:py-2.5",
       "relative w-full",
     ]}
   >
     <a
       href="/"
-      class="brand-wordmark site-brand py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:text-2xl sm:leading-none"
+      class="site-brand justify-self-start py-0.5"
+      aria-label={SITE.title}
     >
-      {SITE.title}
+      <BrandLogo />
     </a>
     <nav
       id="nav-menu"
