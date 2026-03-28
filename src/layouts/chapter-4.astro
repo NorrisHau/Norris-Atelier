@@ -21,38 +21,58 @@
 
     const Chart = window.Chart;
     if(!Chart) return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
     
     const quantTimelineCanvas = document.getElementById("quantTimelineChart");
     if (quantTimelineCanvas && !quantTimelineCanvas.dataset.chartRendered) {
       new Chart(quantTimelineCanvas, {
         type: "line",
         data: {
-          labels: ["0ms", "8ms", "15ms", "30ms", "60ms", "120ms"],
+          labels: isMobile
+            ? ["0", "8", "15", "30", "60", "120"]
+            : ["0ms", "8ms", "15ms", "30ms", "60ms", "120ms"],
           datasets: [
             {
               label: "量化系统累计动作数（示意）",
               data: [0, 1, 3, 6, 9, 12],
-              borderColor: "rgba(59, 130, 246, 1)",
-              backgroundColor: "rgba(59, 130, 246, 0.14)",
+              borderColor: "rgba(117, 143, 152, 1)",
+              backgroundColor: "rgba(117, 143, 152, 0.14)",
               fill: true,
               tension: 0.2,
             },
             {
               label: "普通手动交易累计动作数（示意）",
               data: [0, 0, 0, 1, 1, 2],
-              borderColor: "rgba(148, 163, 184, 1)",
+              borderColor: "rgba(135, 146, 155, 1)",
               tension: 0.2,
             },
           ],
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: isMobile ? { top: 6, right: 4, bottom: 2, left: 2 } : {},
+          },
           plugins: {
             title: { display: true, text: "量化与手动交易执行时间轴对比（示意）" },
           },
           scales: {
-            y: { beginAtZero: true, title: { display: true, text: "完成动作数量" } },
-            x: { title: { display: true, text: "从信号触发开始的时间" } },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                maxTicksLimit: isMobile ? 4 : 7,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "完成动作数量" },
+            },
+            x: {
+              ticks: {
+                maxTicksLimit: isMobile ? 5 : 8,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "从信号触发开始的时间" },
+            },
           },
         },
       });

@@ -69,6 +69,15 @@
 
     const nf = new Intl.NumberFormat("zh-CN");
     const toCurrency = value => `¥${nf.format(Math.round(Number(value) || 0))}`;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const chartTone = {
+      slate: "#87929b",
+      steel: "#758f98",
+      sage: "#7f998b",
+      clay: "#b18d81",
+      fillSteel: "rgba(117,143,152,0.14)",
+      fillSage: "rgba(127,153,139,0.14)",
+    };
 
     const initial = 50000;
     const monthly = 4000;
@@ -96,7 +105,7 @@
       const principal = 1000000;
       const inflationRates = [0.02, 0.03, 0.05];
       const datasets = inflationRates.map((rate, idx) => {
-        const colors = ["#94a3b8", "#3b82f6", "#ef4444"];
+        const colors = [chartTone.slate, chartTone.steel, chartTone.clay];
         return {
           label: `${Math.round(rate * 100)}% 通胀下的实际购买力`,
           data: years.map(y => principal / Math.pow(1 + rate, y)),
@@ -128,8 +137,19 @@
           },
           scales: {
             y: {
-              ticks: { callback: value => toCurrency(value) },
-              title: { display: true, text: "实际购买力" },
+              ticks: {
+                callback: value => toCurrency(value),
+                maxTicksLimit: isMobile ? 4 : 7,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "实际购买力" },
+            },
+            x: {
+              ticks: {
+                maxTicksLimit: isMobile ? 5 : 9,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "时间" },
             },
           },
         },
@@ -153,22 +173,22 @@
             {
               label: "1%（余额宝）",
               data: series1,
-              borderColor: "#94a3b8",
+              borderColor: chartTone.slate,
               fill: false,
               tension: 0.35,
             },
             {
               label: "5%（理想收益）",
               data: series5,
-              borderColor: "#3b82f6",
-              backgroundColor: "rgba(59,130,246,0.14)",
+              borderColor: chartTone.steel,
+              backgroundColor: chartTone.fillSteel,
               fill: true,
               tension: 0.35,
             },
             {
               label: "8%（进取收益）",
               data: series8,
-              borderColor: "#10b981",
+              borderColor: chartTone.sage,
               fill: false,
               tension: 0.35,
             },
@@ -188,11 +208,19 @@
           },
           scales: {
             y: {
-              ticks: { callback: value => toCurrency(value) },
-              title: { display: true, text: "资产规模（元）" },
+              ticks: {
+                callback: value => toCurrency(value),
+                maxTicksLimit: isMobile ? 4 : 7,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "资产规模（元）" },
             },
             x: {
-              title: { display: true, text: "时间" },
+              ticks: {
+                maxTicksLimit: isMobile ? 5 : 9,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "时间" },
             },
           },
         },
@@ -250,15 +278,15 @@
             {
               label: `复利增长（年化 ${(annualRate * 100).toFixed(1)}%）`,
               data: investSeries,
-              borderColor: "#10b981",
-              backgroundColor: "rgba(16,185,129,0.14)",
+              borderColor: chartTone.sage,
+              backgroundColor: chartTone.fillSage,
               fill: true,
               tension: 0.35,
             },
             {
               label: "只存不投（0%）",
               data: cashOnlySeries,
-              borderColor: "#e76f51",
+              borderColor: chartTone.clay,
               borderDash: [6, 4],
               fill: false,
               tension: 0.35,
@@ -279,10 +307,20 @@
           },
           scales: {
             y: {
-              ticks: { callback: value => toCurrency(value) },
-              title: { display: true, text: "资产规模（元）" },
+              ticks: {
+                callback: value => toCurrency(value),
+                maxTicksLimit: isMobile ? 4 : 7,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "资产规模（元）" },
             },
-            x: { title: { display: true, text: "时间" } },
+            x: {
+              ticks: {
+                maxTicksLimit: isMobile ? 5 : 9,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "时间" },
+            },
           },
         },
       });

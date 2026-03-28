@@ -3,7 +3,7 @@
 @layer base {
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
-    @apply prose;
+    @apply prose max-w-none;
 
     h1,
     h2,
@@ -11,10 +11,36 @@
     h4,
     th {
       @apply mb-3 text-foreground;
+      font-family:
+        var(--reading-font-serif), "Source Serif Pro", "Noto Serif SC", Georgia,
+        serif;
+      font-stretch: 100%;
+      letter-spacing: 0.002em;
+    }
+
+    h2 {
+      @apply mt-12 mb-4;
+      font-size: clamp(1.548rem, 1.152rem + 0.99vw, 2.115rem);
+      line-height: 1.152;
+      font-weight: 430;
     }
 
     h3 {
-      @apply italic;
+      @apply mt-8 mb-3;
+      font-size: clamp(1.224rem, 1.026rem + 0.612vw, 1.638rem);
+      line-height: 1.206;
+      font-weight: 350;
+      font-style: italic;
+    }
+
+    h4 {
+      @apply mt-6 mb-2;
+      font-size: clamp(0.99rem, 0.918rem + 0.324vw, 1.224rem);
+      line-height: 1.305;
+      font-weight: 640;
+      font-family:
+        "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      font-stretch: 97%;
     }
 
     p,
@@ -27,8 +53,20 @@
       @apply text-foreground;
     }
 
+    p,
+    li {
+      @apply text-[clamp(1.035rem,0.927rem+0.36vw,1.206rem)];
+      line-height: 1.728;
+      font-weight: 360;
+      font-family:
+        "Iowan Old Style", "Source Serif Pro", "Noto Serif SC", Georgia, serif;
+      font-stretch: 98%;
+      letter-spacing: 0.0015em;
+      word-spacing: 0.01em;
+    }
+
     a {
-      @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      @apply wrap-break-word text-accent/95 decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
     }
 
     ul {
@@ -37,6 +75,19 @@
 
     li {
       @apply marker:text-accent;
+    }
+
+    ul,
+    ol {
+      @apply my-4 ps-7;
+    }
+
+    li + li {
+      @apply mt-2;
+    }
+
+    p + p {
+      margin-top: 0;
     }
 
     hr {
@@ -49,6 +100,11 @@
 
     figcaption {
       @apply opacity-75;
+      font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      font-size: clamp(0.81rem, 0.774rem + 0.162vw, 0.9rem);
+      line-height: 1.53;
+      font-weight: 400;
+      font-stretch: 96%;
     }
 
     table {
@@ -68,6 +124,12 @@
 
     code {
       @apply rounded bg-muted/75 p-1 wrap-break-word text-foreground before:content-none after:content-none;
+      font-family:
+        "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", ui-monospace,
+        monospace;
+      font-size: 0.81em;
+      font-weight: 460;
+      font-stretch: 98%;
     }
 
     .astro-code code {
@@ -75,7 +137,14 @@
     }
 
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+      @apply border-s-accent/80 wrap-break-word opacity-85;
+      font-family:
+        "Iowan Old Style", "Source Serif Pro", "Noto Serif SC", Georgia, serif;
+      font-size: clamp(1.08rem, 0.954rem + 0.486vw, 1.404rem);
+      line-height: 1.368;
+      font-weight: 360;
+      font-stretch: 99%;
+      letter-spacing: 0.002em;
     }
 
     details {
@@ -94,6 +163,9 @@
   /* ===== Code Blocks & Syntax Highlighting ===== */
   .astro-code {
     @apply flex border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
+    font-family:
+      "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", ui-monospace,
+      monospace;
   }
 
   html[data-theme="dark"] .astro-code {

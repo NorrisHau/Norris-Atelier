@@ -89,72 +89,93 @@ const nextPost =
   <BackButton />
   <main
     id="main-content"
-    class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
+    class:list={[
+      "page-enter app-layout post-page pb-12",
+      { "mt-8": !SITE.showBackButton },
+    ]}
     data-pagefind-body
   >
-    <h1
-      transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
-    >
-      {title}
-    </h1>
-    <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-    </div>
-    <article
-      id="article"
-      class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
-    >
-      <Content />
-    </article>
+    <div class="article-wrapper">
+      <header class="article-header">
+        <h1
+          transition:name={slugifyStr(title.replaceAll(".", "-"))}
+          class="article-title inline-block font-bold text-accent"
+        >
+          {title}
+        </h1>
+        <div class="my-2 flex items-center gap-2">
+          <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+        </div>
+      </header>
 
-    {post.data.chapter === 1 && <Chapter1 />}
-    {post.data.chapter === 2 && <Chapter2 />}
-    {post.data.chapter === 3 && <Chapter3 />}
-    {post.data.chapter === 4 && <Chapter4 />}
+      <aside
+        class="post-toc hidden xl:block"
+        aria-label="Table of contents"
+        data-pagefind-ignore
+      >
+        <p class="post-toc__title">Table of Contents</p>
+        <nav id="post-toc-list" class="post-toc__list" aria-label="文章目录"></nav>
+      </aside>
+      <div class="article-prose-wrapper">
+        <article
+          id="article"
+          class="app-prose w-full prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+        >
+          <Content />
+        </article>
 
-    <hr class="my-8 border-dashed" />
+        {post.data.chapter === 1 && <Chapter1 />}
+        {post.data.chapter === 2 && <Chapter2 />}
+        {post.data.chapter === 3 && <Chapter3 />}
+        {post.data.chapter === 4 && <Chapter4 />}
+      </div>
 
-    <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
-    </ul>
+      <div class="post-article">
+        <hr class="my-2 border-dashed" />
 
-    <BackToTopButton />
+        <ul class="mt-4 mb-6 flex flex-wrap gap-4 sm:my-6">
+          {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+        </ul>
 
-    <ShareLinks />
+        <div class="post-article__meta">
+          <BackToTopButton />
+          <ShareLinks />
+        </div>
 
-    <hr class="my-6 border-dashed" />
+        <hr class="my-6 border-dashed" />
 
-    <!-- Previous/Next Post Buttons -->
-    <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      {
-        prevPost && (
-          <a
-            href={getPath(prevPost.id, prevPost.filePath)}
-            class="flex w-full gap-1 hover:opacity-75"
-          >
-            <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
-            <div>
-              <span>Previous Post</span>
-              <div class="text-sm text-accent/85">{prevPost.title}</div>
-            </div>
-          </a>
-        )
-      }
-      {
-        nextPost && (
-          <a
-            href={getPath(nextPost.id, nextPost.filePath)}
-            class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
-          >
-            <div>
-              <span>Next Post</span>
-              <div class="text-sm text-accent/85">{nextPost.title}</div>
-            </div>
-            <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
-          </a>
-        )
-      }
+        <!-- Previous/Next Post Buttons -->
+        <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {
+            prevPost && (
+              <a
+                href={getPath(prevPost.id, prevPost.filePath)}
+                class="flex w-full gap-1 hover:opacity-75"
+              >
+                <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
+                <div>
+                  <span>Previous Post</span>
+                  <div class="text-sm text-accent/85">{prevPost.title}</div>
+                </div>
+              </a>
+            )
+          }
+          {
+            nextPost && (
+              <a
+                href={getPath(nextPost.id, nextPost.filePath)}
+                class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
+              >
+                <div>
+                  <span>Next Post</span>
+                  <div class="text-sm text-accent/85">{nextPost.title}</div>
+                </div>
+                <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
+              </a>
+            )
+          }
+        </div>
+      </div>
     </div>
   </main>
   <Footer />
@@ -164,14 +185,14 @@ const nextPost =
   /** Create a progress indicator
    *  at the top */
   function createProgressBar() {
+    if (document.querySelector(".reading-progress")) return;
     // Create the main container div
     const progressContainer = document.createElement("div");
-    progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+    progressContainer.className = "reading-progress";
 
     // Create the progress bar div
     const progressBar = document.createElement("div");
-    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.className = "reading-progress__bar";
     progressBar.id = "myBar";
 
     // Append the progress bar to the progress container
@@ -224,6 +245,86 @@ const nextPost =
   }
   addHeadingLinks();
 
+  function buildTOC() {
+    const article = document.querySelector(".article-prose-wrapper");
+    const toc = document.querySelector("#post-toc-list");
+    if (!article || !toc) return;
+
+    const headings = Array.from(article.querySelectorAll("h2, h3, h4"));
+    if (!headings.length) {
+      toc.innerHTML = `<p class="text-sm text-foreground/50">本篇暂无目录。</p>`;
+      return;
+    }
+
+    const slugifyHeading = text =>
+      text
+        .trim()
+        .toLowerCase()
+        .replace(/[^\w\u4e00-\u9fa5\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+
+    toc.innerHTML = headings
+      .map((heading, idx) => {
+        const text = heading.textContent?.trim() ?? "";
+        if (!heading.id) {
+          heading.id = slugifyHeading(text) || `heading-${idx + 1}`;
+        }
+        const level = heading.tagName.toLowerCase();
+        return `<a href="#${heading.id}" class="post-toc__link ${level === "h3" ? "is-sub" : ""} ${level === "h4" ? "is-sub-two" : ""}">${text}</a>`;
+      })
+      .join("");
+  }
+  buildTOC();
+
+  function activateTOCOnScroll() {
+    const toc = document.querySelector("#post-toc-list");
+    if (!toc) return;
+    const links = Array.from(toc.querySelectorAll(".post-toc__link"));
+    if (!links.length) return;
+
+    const sections = links
+      .map(link => {
+        const id = link.getAttribute("href")?.replace("#", "");
+        if (!id) return null;
+        const section = document.getElementById(id);
+        return section ? { link, section } : null;
+      })
+      .filter(Boolean);
+
+    if (!sections.length) return;
+
+    const setActive = id => {
+      sections.forEach(({ link, section }) => {
+        const isActive = section.id === id;
+        link.classList.toggle("is-active", isActive);
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort(
+            (a, b) =>
+              Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top)
+          )[0];
+        if (visible?.target?.id) {
+          setActive(visible.target.id);
+        }
+      },
+      {
+        rootMargin: "-16% 0px -72% 0px",
+        threshold: [0, 0.2, 0.6, 1],
+      }
+    );
+
+    sections.forEach(({ section }) => observer.observe(section));
+    setActive(sections[0].section.id);
+  }
+  activateTOCOnScroll();
+
   /** Attaches copy buttons to code blocks in the document,
    * allowing users to copy code easily. */
   function attachCopyButtons() {
@@ -274,36 +375,6 @@ const nextPost =
     }
   }
   attachCopyButtons();
-
-  async function loadChartJs() {
-    if (window.Chart) return window.Chart;
-
-    await new Promise((resolve, reject) => {
-      const existingScript = document.querySelector(
-        'script[data-chartjs-loader="true"]'
-      );
-      if (existingScript) {
-        existingScript.addEventListener("load", () => resolve(true), {
-          once: true,
-        });
-        existingScript.addEventListener("error", () => reject(false), {
-          once: true,
-        });
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js";
-      script.async = true;
-      script.dataset.chartjsLoader = "true";
-      script.onload = () => resolve(true);
-      script.onerror = () => reject(false);
-      document.head.appendChild(script);
-    });
-
-    return window.Chart;
-  }
 
   /* Go to page start after page swap */
   document.addEventListener("astro:after-swap", () =>

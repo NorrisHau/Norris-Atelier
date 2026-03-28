@@ -1,34 +1,67 @@
-﻿---
+---
 // src/layouts/chapter-3.astro
-// 第三章固定参数对比图：初始50000，每月新增4000，1%/5%/8%
+// 第三章交互图表：
+// 1) 30年复利曲线（1% / 5% / 8%）
+// 2) 工具风险收益雷达图（现金/债券/ETF/个股/杠杆）
 ---
 
-<div class="chapter-interactive-section mt-12 border-t border-dashed border-skin-line pt-8">
-  <h3 class="mb-4 text-xl font-bold">30年复利对比（固定参数）</h3>
-  <p class="mb-6 text-sm text-foreground/70">
-    固定条件：初始资金 50,000 元，每月新增 4,000 元。对比普通存入余额宝（1%）、理财（5%）、进阶理财（8%）。
-  </p>
-  <div class="chart-card bg-skin-card p-4">
-    <canvas id="chapter3FixedComparisonChart"></canvas>
-  </div>
+<div
+  class="chapter-interactive-section border-skin-line mt-12 space-y-8 border-t border-dashed pt-8"
+>
+  <section>
+    <h3 class="mb-4 text-xl font-bold">30年复利对比（固定参数）</h3>
+    <p class="mb-6 text-sm text-foreground/70">
+      固定条件：初始资金 50,000 元，每月新增 4,000
+      元。对比现金管理（1%）、稳健配置（5%）、进阶配置（8%）。
+    </p>
+    <div class="chart-card bg-skin-card p-4">
+      <canvas id="chapter3FixedComparisonChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h3 class="mb-4 text-xl font-bold">工具画像：收益潜力、波动、复杂度</h3>
+    <p class="mb-6 text-sm text-foreground/70">
+      分数用于学习示意（1~10）：帮助你理解“好工具”要和能力圈匹配，而不是只看收益想象。
+    </p>
+    <div class="chart-card bg-skin-card p-4">
+      <canvas id="chapter3ToolProfileChart"></canvas>
+    </div>
+  </section>
 </div>
 
 <script is:inline data-astro-rerun>
   (async function () {
+    const stateKey = "__chapter3State";
+
+    function destroyPreviousState() {
+      const previous = window[stateKey];
+      if (previous?.cleanup) previous.cleanup();
+      window[stateKey] = { cleanup: () => {} };
+    }
+
     function loadChartJs() {
       if (window.Chart) return Promise.resolve(window.Chart);
+
       return new Promise((resolve, reject) => {
-        const existing = document.querySelector('script[data-chartjs-loader="true"]');
+        const existing = document.querySelector(
+          'script[data-chartjs-loader="true"]'
+        );
         if (existing) {
-          existing.addEventListener("load", () => resolve(window.Chart), { once: true });
-          existing.addEventListener("error", () => reject(new Error("Chart.js load failed")), {
+          existing.addEventListener("load", () => resolve(window.Chart), {
             once: true,
           });
+          existing.addEventListener(
+            "error",
+            () => reject(new Error("Chart.js load failed")),
+            { once: true }
+          );
           return;
         }
 
         const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js";
+        script.src =
+          "https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js";
         script.async = true;
         script.dataset.chartjsLoader = "true";
         script.onload = () => resolve(window.Chart);
@@ -37,86 +70,228 @@
       });
     }
 
-    const Chart = await loadChartJs().catch(() => null);
-    if (!Chart) return;
+    function destroyChartIfExists(Chart, canvas) {
+      if (!Chart || !canvas) return;
+      const existing = Chart.getChart(canvas);
+      if (existing) existing.destroy();
+    }
 
-    const canvas = document.getElementById("chapter3FixedComparisonChart");
-    if (!canvas) return;
+    function buildCompoundChart(Chart) {
+      const canvas = document.getElementById("chapter3FixedComparisonChart");
+      if (!canvas) return null;
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      const chartTone = {
+        slate: "#87929b",
+        steel: "#758f98",
+        sage: "#7f998b",
+        clay: "#b18d81",
+        fillSteel: "rgba(117,143,152,0.14)",
+        fillSlate: "rgba(135,146,155,0.14)",
+      };
 
-    const initial = 50000;
-    const monthly = 4000;
-    const yearly = monthly * 12;
-    const years = Array.from({ length: 31 }, (_, i) => i);
+      destroyChartIfExists(Chart, canvas);
 
-    function growthSeries(rate) {
-      return years.map(y => {
-        if (y === 0) return initial;
-        const p = initial * Math.pow(1 + rate, y);
-        const c = yearly * ((Math.pow(1 + rate, y) - 1) / rate);
-        return p + c;
+      const initial = 50000;
+      const monthly = 4000;
+      const yearly = monthly * 12;
+      const years = Array.from({ length: 31 }, (_, i) => i);
+
+      function growthSeries(rate) {
+        return years.map(y => {
+          if (y === 0) return initial;
+          const principal = initial * Math.pow(1 + rate, y);
+          const contribution = yearly * ((Math.pow(1 + rate, y) - 1) / rate);
+          return principal + contribution;
+        });
+      }
+
+      const low = growthSeries(0.01);
+      const mid = growthSeries(0.05);
+      const high = growthSeries(0.08);
+      const nf = new Intl.NumberFormat("zh-CN");
+
+      return new Chart(canvas, {
+        type: "line",
+        data: {
+          labels: years.map(y => `第${y}年`),
+          datasets: [
+            {
+              label: "现金管理（1%）",
+              data: low,
+              borderColor: chartTone.slate,
+              tension: 0.35,
+              fill: false,
+            },
+            {
+              label: "稳健配置（5%）",
+              data: mid,
+              borderColor: chartTone.steel,
+              backgroundColor: chartTone.fillSteel,
+              tension: 0.35,
+              fill: true,
+            },
+            {
+              label: "进阶配置（8%）",
+              data: high,
+              borderColor: chartTone.sage,
+              tension: 0.35,
+              fill: false,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            title: { display: true, text: "固定参数下的30年资产曲线" },
+            tooltip: {
+              callbacks: {
+                label: ctx =>
+                  `${ctx.dataset.label}：¥${nf.format(
+                    Math.round(ctx.parsed.y || 0)
+                  )}`,
+              },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: value =>
+                  `¥${nf.format(Math.round(Number(value) || 0))}`,
+                maxTicksLimit: isMobile ? 4 : 7,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "资产规模（元）" },
+            },
+            x: {
+              ticks: {
+                maxTicksLimit: isMobile ? 5 : 9,
+                font: { size: isMobile ? 10 : 12 },
+              },
+              title: { display: !isMobile, text: "时间" },
+            },
+          },
+        },
       });
     }
 
-    const series1 = growthSeries(0.01);
-    const series5 = growthSeries(0.05);
-    const series8 = growthSeries(0.08);
+    function buildToolProfileChart(Chart) {
+      const canvas = document.getElementById("chapter3ToolProfileChart");
+      if (!canvas) return null;
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      const chartTone = {
+        slate: "#87929b",
+        steel: "#758f98",
+        sage: "#7f998b",
+        amber: "#a78f78",
+        clay: "#b18d81",
+      };
 
-    const nf = new Intl.NumberFormat("zh-CN");
+      destroyChartIfExists(Chart, canvas);
 
-    new Chart(canvas, {
-      type: "line",
-      data: {
-        labels: years.map(y => `第${y}年`),
-        datasets: [
-          {
-            label: "普通存入余额宝（1%）",
-            data: series1,
-            borderColor: "#94a3b8",
-            tension: 0.35,
-            fill: false,
+      return new Chart(canvas, {
+        type: "radar",
+        data: {
+          labels: [
+            "收益潜力",
+            "回撤压力",
+            "学习成本",
+            "执行难度",
+            "长期可复用",
+          ],
+          datasets: [
+            {
+              label: "现金/货基",
+              data: [2, 2, 2, 2, 8],
+              borderColor: chartTone.slate,
+              backgroundColor: "rgba(135,146,155,0.16)",
+              borderWidth: 2,
+            },
+            {
+              label: "债券/债基",
+              data: [4, 4, 4, 3, 8],
+              borderColor: chartTone.steel,
+              backgroundColor: "rgba(117,143,152,0.16)",
+              borderWidth: 2,
+            },
+            {
+              label: "宽基ETF",
+              data: [7, 6, 4, 4, 9],
+              borderColor: chartTone.sage,
+              backgroundColor: "rgba(127,153,139,0.16)",
+              borderWidth: 2,
+            },
+            {
+              label: "个股",
+              data: [8, 8, 7, 7, 5],
+              borderColor: chartTone.amber,
+              backgroundColor: "rgba(167,143,120,0.16)",
+              borderWidth: 2,
+            },
+            {
+              label: "杠杆/衍生品",
+              data: [9, 10, 9, 9, 2],
+              borderColor: chartTone.clay,
+              backgroundColor: "rgba(177,141,129,0.16)",
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: true, text: "工具选择不是比刺激，而是比匹配度" },
           },
-          {
-            label: "理财（5%）",
-            data: series5,
-            borderColor: "#3b82f6",
-            backgroundColor: "rgba(59,130,246,0.14)",
-            tension: 0.35,
-            fill: true,
-          },
-          {
-            label: "进阶理财（8%）",
-            data: series8,
-            borderColor: "#10b981",
-            tension: 0.35,
-            fill: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: "index", intersect: false },
-        plugins: {
-          title: { display: true, text: "固定参数下的30年资产曲线" },
-          tooltip: {
-            callbacks: {
-              label: ctx => `${ctx.dataset.label}：¥${nf.format(Math.round(ctx.parsed.y || 0))}`,
+          scales: {
+            r: {
+              min: 0,
+              max: 10,
+              ticks: {
+                stepSize: 2,
+                backdropColor: "transparent",
+                font: { size: isMobile ? 10 : 12 },
+              },
+              pointLabels: {
+                font: { size: isMobile ? 10 : 12 },
+              },
             },
           },
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: value => `¥${nf.format(Math.round(Number(value) || 0))}`,
-            },
-            title: { display: true, text: "资产规模（元）" },
-          },
-          x: {
-            title: { display: true, text: "时间" },
-          },
-        },
+      });
+    }
+
+    destroyPreviousState();
+
+    const Chart = await loadChartJs().catch(() => null);
+    if (!Chart) return;
+
+    const compoundChart = buildCompoundChart(Chart);
+    const profileChart = buildToolProfileChart(Chart);
+
+    window[stateKey] = {
+      cleanup: () => {
+        if (compoundChart) compoundChart.destroy();
+        if (profileChart) profileChart.destroy();
       },
-    });
+    };
   })();
 </script>
+
+<style>
+  .chart-card {
+    position: relative;
+    min-height: 320px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 0.75rem;
+  }
+
+  @media (max-width: 768px) {
+    .chart-card {
+      min-height: 360px;
+    }
+  }
+</style>

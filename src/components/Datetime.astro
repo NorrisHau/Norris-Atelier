@@ -49,7 +49,11 @@ const date = datetime.format("D MMM, YYYY"); // e.g., '22 Mar, 2025'
     )
   }
   <time
-    class:list={["text-sm", { "sm:text-base": size === "lg" }]}
+    class:list={[
+      "text-sm",
+      'font-["JetBrains_Mono","IBM_Plex_Mono","SFMono-Regular",ui-monospace,monospace]',
+      { "sm:text-base": size === "lg" },
+    ]}
     datetime={datetime.toISOString()}>{date}</time
   >
 </div>
