@@ -213,12 +213,11 @@ html[data-theme="dark"] {
     @apply relative grid items-stretch gap-3 overflow-hidden rounded-xl p-3.5 transition duration-200 ease-out sm:gap-4 sm:p-4;
     grid-template-columns: minmax(0, 1fr);
     border: none;
-    background:
-      linear-gradient(
-        132deg,
-        color-mix(in srgb, var(--color-card-bg) 96%, #c9bea6 4%) 0%,
-        color-mix(in srgb, var(--color-card-bg) 98%, transparent) 62%
-      );
+    background: linear-gradient(
+      132deg,
+      color-mix(in srgb, var(--color-card-bg) 96%, #c9bea6 4%) 0%,
+      color-mix(in srgb, var(--color-card-bg) 98%, transparent) 62%
+    );
     animation: card-enter 360ms ease-out both;
     transform-origin: center;
   }
@@ -231,12 +230,11 @@ html[data-theme="dark"] {
 
   .bento-card:hover {
     transform: translateY(-1px) scale(1.002);
-    background:
-      linear-gradient(
-        132deg,
-        color-mix(in srgb, var(--color-card-bg) 95%, #c6baa2 5%) 0%,
-        color-mix(in srgb, var(--color-card-bg) 98%, transparent) 62%
-      );
+    background: linear-gradient(
+      132deg,
+      color-mix(in srgb, var(--color-card-bg) 95%, #c6baa2 5%) 0%,
+      color-mix(in srgb, var(--color-card-bg) 98%, transparent) 62%
+    );
   }
 
   .bento-card::before,
@@ -261,7 +259,11 @@ html[data-theme="dark"] {
     bottom: -16px;
     width: 62px;
     height: 62px;
-    background: color-mix(in srgb, var(--tag-investment-border) 44%, transparent);
+    background: color-mix(
+      in srgb,
+      var(--tag-investment-border) 44%,
+      transparent
+    );
     clip-path: polygon(0 100%, 0 0, 100% 100%);
   }
 
@@ -298,7 +300,12 @@ html[data-theme="dark"] {
   .domain-pill,
   .theme-chip,
   .theme-eyebrow {
-    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    font-family:
+      "Inter",
+      "Noto Sans SC",
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
   .bento-card__desc {
@@ -342,6 +349,14 @@ html[data-theme="dark"] {
     min-height: 320px;
   }
 
+  .chart-card canvas#triangleChart {
+    min-height: 420px;
+  }
+
+  .chart-card canvas#decisionFlowChart {
+    min-height: 220px;
+  }
+
   @media (max-width: 767px) {
     .chart-card {
       @apply px-2 py-3;
@@ -349,6 +364,14 @@ html[data-theme="dark"] {
 
     .chart-card canvas {
       min-height: 360px;
+    }
+
+    .chart-card canvas#triangleChart {
+      min-height: 460px;
+    }
+
+    .chart-card canvas#decisionFlowChart {
+      min-height: 250px;
     }
   }
 
@@ -425,7 +448,7 @@ html[data-theme="dark"] {
   }
 
   .search-reveal__form {
-    @apply pointer-events-none absolute inset-y-0 left-0 flex w-full min-w-0 items-center pe-10 ps-3 opacity-0;
+    @apply pointer-events-none absolute inset-y-0 left-0 flex w-full min-w-0 items-center ps-3 pe-10 opacity-0;
     transition: opacity 180ms ease;
   }
 
@@ -434,8 +457,13 @@ html[data-theme="dark"] {
   }
 
   .search-reveal__form input {
-    @apply h-8 min-w-0 w-full border-none bg-transparent text-sm outline-none;
-    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    @apply h-8 w-full min-w-0 border-none bg-transparent text-sm outline-none;
+    font-family:
+      "Inter",
+      "Noto Sans SC",
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
   @media (max-width: 639px) {
@@ -604,7 +632,12 @@ html[data-theme="dark"] {
 
   .post-toc__title {
     @apply mb-3 flex items-center gap-2 text-xs font-semibold tracking-[0.05em] text-foreground/65;
-    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    font-family:
+      "Inter",
+      "Noto Sans SC",
+      system-ui,
+      -apple-system,
+      sans-serif;
     line-height: 1.215;
   }
 
@@ -619,7 +652,12 @@ html[data-theme="dark"] {
 
   .post-toc__link {
     @apply rounded-md px-1 py-1 text-sm text-foreground/70 no-underline transition-colors hover:text-accent;
-    font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    font-family:
+      "Inter",
+      "Noto Sans SC",
+      system-ui,
+      -apple-system,
+      sans-serif;
     line-height: 1.395;
     font-weight: 430;
     font-stretch: 96%;
