@@ -1,4 +1,4 @@
----
+﻿---
 import { render, type CollectionEntry } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
@@ -9,6 +9,7 @@ import ShareLinks from "@/components/ShareLinks.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import { getPath } from "@/utils/getPath";
+import { getResolvedPostCover } from "@/utils/postCovers";
 import { slugifyStr } from "@/utils/slugify";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
@@ -39,16 +40,13 @@ const {
 
 const { Content } = await render(post);
 
-let ogImageUrl: string | undefined;
+const explicitCover =
+  typeof initOgImage === "string" ? initOgImage : initOgImage?.src;
+const coverImageUrl = getResolvedPostCover(post.id, explicitCover);
 
-// Determine OG image source
-if (typeof initOgImage === "string") {
-  ogImageUrl = initOgImage; // Remote OG image (absolute URL)
-} else if (initOgImage?.src) {
-  ogImageUrl = initOgImage.src; // Local asset
-}
+let ogImageUrl: string | undefined = coverImageUrl;
 
-// Use dynamic OG image if enabled and no remote|local ogImage
+// Use dynamic OG image if enabled and no explicit|named cover image
 if (!ogImageUrl && SITE.dynamicOgImage) {
   ogImageUrl = `${getPath(post.id, post.filePath)}/index.png`;
 }
@@ -106,6 +104,11 @@ const nextPost =
         <div class="my-2 flex items-center gap-2">
           <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
         </div>
+              {coverImageUrl && (
+          <div class="post-hero-image">
+            <img src={coverImageUrl} alt={title} loading="eager" decoding="async" />
+          </div>
+        )}
       </header>
 
       <aside
@@ -114,7 +117,7 @@ const nextPost =
         data-pagefind-ignore
       >
         <p class="post-toc__title">Table of Contents</p>
-        <nav id="post-toc-list" class="post-toc__list" aria-label="文章目录"></nav>
+        <nav id="post-toc-list" class="post-toc__list" aria-label="鏂囩珷鐩綍"></nav>
       </aside>
       <div class="article-prose-wrapper">
         <article
@@ -252,7 +255,7 @@ const nextPost =
 
     const headings = Array.from(article.querySelectorAll("h2, h3, h4"));
     if (!headings.length) {
-      toc.innerHTML = `<p class="text-sm text-foreground/50">本篇暂无目录。</p>`;
+      toc.innerHTML = `<p class="text-sm text-foreground/50">鏈瘒鏆傛棤鐩綍銆?/p>`;
       return;
     }
 
@@ -381,3 +384,6 @@ const nextPost =
     window.scrollTo({ left: 0, top: 0, behavior: "instant" })
   );
 </script>
+
+
+
